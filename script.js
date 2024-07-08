@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 根据出现次数计算点的半径范围
         const radiusScale = d3.scaleLinear()
             .domain([1, d3.max(Object.values(countData).map(obj => d3.max(Object.values(obj))))])
-            .range([3, 10]);
+            .range([3, 8]);
 
         x.domain(themes);
         y.domain(categories);
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .attr("cx", d => x(d.theme) + x.bandwidth() / 2)
             .attr("cy", d => y(d.category) + y.bandwidth() / 2)
             .attr("r", d => radiusScale(countData[d.category][d.value]))
+            .attr("fill", "black") // 初始颜色设置为灰色
             .on("mouseover", function(event, d) {
                 d3.select(this).attr("r", radiusScale(countData[d.category][d.value]) * 1.5).attr("fill", "orange");
                 tooltip.transition()
@@ -114,8 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
-            .on("mouseout", function(d) {
-                d3.select(this).attr("r", radiusScale(countData[d.category][d.value])).attr("fill", "steelblue");
+            .on("mouseout", function(event, d) {
+                d3.select(this).attr("r", radiusScale(countData[d.category][d.value])).attr("fill", "grey"); // 确保恢复到初始颜色
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
