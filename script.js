@@ -143,14 +143,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     .style("opacity", .9);
 
                 tooltip.html(
-                    `<strong></strong> ${d.value}<br>
+                    `<strong>>>></strong> ${d.value}<br>
                     <strong>相关点子:</strong> ${relatedTitles.join("   ||   ")}`
                 )
-                .style("left", () => {
-                    if (event.pageX + 300 > window.innerWidth) {
-                        return (event.pageX - 150) + "px";
+                
+                const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+
+                tooltip.style("left", () => {
+                    if (event.pageX + tooltipWidth > window.innerWidth) {
+                        return (event.pageX - tooltipWidth - 5) + "px"; // 左弹出tooltip
                     }
-                    return (event.pageX + 5) + "px";
+                    return (event.pageX + 5) + "px";//右弹出tooltip
                 })
                 .style("top", (event.pageY - 28) + "px");
             })
