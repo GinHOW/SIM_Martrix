@@ -62,7 +62,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr("transform", "rotate(-65)")// 旋转文字以避免重叠
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
-                .attr("dy", ".15em");
+                .attr("dy", ".15em")
+                .on("mouseover", function(event, d) {
+                    const dataItem = data.find(item => item.标题 === d);
+                    if (dataItem) {
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        tooltip.html(`<strong>${d}:</strong> ${dataItem.描述}`)
+                            .style("left", () => {
+                                if (event.pageX + 300 > window.innerWidth) {
+                                    return (event.pageX - 300) + "px";
+                                }
+                                return (event.pageX + 5) + "px";
+                            })
+                            .style("top", (event.pageY - 28) + "px");
+                    }
+                })
+                .on("mouseout", function() {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
 
             yAxis.call(d3.axisLeft(y))
                 .selectAll("text")
@@ -125,7 +146,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     `<strong></strong> ${d.value}<br>
                     <strong>相关点子:</strong> ${relatedTitles.join("   ||   ")}`
                 )
-                .style("left", (event.pageX + 5) + "px")
+                .style("left", () => {
+                    if (event.pageX + 300 > window.innerWidth) {
+                        return (event.pageX - 300) + "px";
+                    }
+                    return (event.pageX + 5) + "px";
+                })
                 .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function(event, d) {

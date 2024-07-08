@@ -21,12 +21,28 @@ canvas {
 .tooltip {
     position: absolute;
     text-align: left; /* 左对齐 */
-    width: auto;
+    max-width: 300px; /* 设置最大宽度 */
+    word-wrap: break-word; /* 如果内容超过最大宽度，则换行 */
     height: auto;
-    padding: 5px;
+    padding:10px;
     font: 12px sans-serif;
     background: rgb(181, 181, 181);
-    border: 0;
+    border: 1px solid #000;;
     border-radius: 8px;
     pointer-events: none;
+}
+
+#saveSVG {
+    margin: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#saveSVG:hover {
+    background-color: #45a049;
 }
