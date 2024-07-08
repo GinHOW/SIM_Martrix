@@ -61,3 +61,7 @@ canvas {
     max-height: 300px; /* 调整图片的最大高度 */
     display: block;
 }
+
+.x-axis text.highlighted {
+    fill: orange; /* 定义高亮颜色 */
+}

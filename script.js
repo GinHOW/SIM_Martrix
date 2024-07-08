@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const xAxis = svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .attr("class", "axis");
+        .attr("class", "x-axis");
 
     const yAxis = svg.append("g")
-        .attr("class", "axis");
+        .attr("class", "y-axis");
 
     const tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         function updateFontSize() {
-            const fontSize = Math.max(6, Math.min(10, width / themes.length)); // 根据宽度调整字体大小
+            const fontSize = Math.max(6, Math.min(8, width / themes.length)); // 根据宽度调整字体大小
 
             xAxis.call(d3.axisBottom(x))
                 .selectAll("text")
@@ -174,6 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 获取具有相同分类的标题
                 const relatedTitles = data.filter(item => item[d.category] === d.value).map(item => item.标题);
 
+                 // 高亮显示所有相关的标题
+                svg.selectAll(".x-axis text")
+                    .filter(function(theme) { return relatedTitles.includes(theme); })
+                    .classed("highlighted", true);
+
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
@@ -195,6 +200,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .on("mouseout", function(event, d) {
                 d3.select(this).attr("r", radiusScale(countData[d.category][d.value])).attr("fill", "grey"); // 点击后变为灰色
+               
+                // 取消高亮显示
+                svg.selectAll(".x-axis text")
+                   .classed("highlighted", false);
+                
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
@@ -225,3 +235,20 @@ function saveSVG() {
     URL.revokeObjectURL(svgURL);
     document.body.removeChild(downloadLink);
 }
+
+function updateImageContainerPosition() {
+    const imageContainer = document.querySelector("#image-container");
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const containerHeight = imageContainer.offsetHeight;
+    const containerWidth = imageContainer.offsetWidth;
+
+    const top = (windowHeight - containerHeight) / 2;
+    const left = (windowWidth - containerWidth) / 2;
+
+    imageContainer.style.top = `${top}px`;
+    imageContainer.style.left = `${left}px`;
+}
+
+// 在窗口大小变化时调用函数更新位置
+window.addEventListener("resize", updateImageContainerPosition);
