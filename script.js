@@ -52,19 +52,25 @@ document.addEventListener('DOMContentLoaded', function() {
         x.domain(themes);
         y.domain(categories);
 
-        const fontSize = Math.max(1, Math.min(10, width / themes.length));
-        
-        xAxis.call(d3.axisBottom(x))
-            .selectAll("text")
-            .style("font-size", fontSize + "px")
-            .attr("transform", "rotate(-65)")// 旋转文字以避免重叠
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em");
 
-        yAxis.call(d3.axisLeft(y))
-            .selectAll("text")
-            .style("font-size", fontSize + "px");
+        function updateFontSize() {
+            const fontSize = Math.max(6, Math.min(10, width / themes.length)); // 根据宽度调整字体大小
+
+            xAxis.call(d3.axisBottom(x))
+                .selectAll("text")
+                .style("font-size", fontSize + "px")
+                .attr("transform", "rotate(-65)")// 旋转文字以避免重叠
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em");
+
+            yAxis.call(d3.axisLeft(y))
+                .selectAll("text")
+                .style("font-size", fontSize + "px");
+        }
+
+        updateFontSize();
+
 
         // 隐藏轴本身
         xAxis.selectAll("path").remove();
@@ -105,18 +111,25 @@ document.addEventListener('DOMContentLoaded', function() {
             .attr("cx", d => x(d.theme) + x.bandwidth() / 2)
             .attr("cy", d => y(d.category) + y.bandwidth() / 2)
             .attr("r", d => radiusScale(countData[d.category][d.value]))
-            .attr("fill", "black") // 初始颜色设置为灰色
+            .attr("fill", "black") // 初始颜色设置为黑色
             .on("mouseover", function(event, d) {
                 d3.select(this).attr("r", radiusScale(countData[d.category][d.value]) * 1.5).attr("fill", "orange");
+                // 获取具有相同分类的标题
+                const relatedTitles = data.filter(item => item[d.category] === d.value).map(item => item.标题);
+
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(d.value)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+
+                tooltip.html(
+                    `<strong></strong> ${d.value}<br>
+                    <strong>相关点子:</strong> ${relatedTitles.join("   ||   ")}`
+                )
+                .style("left", (event.pageX + 5) + "px")
+                .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function(event, d) {
-                d3.select(this).attr("r", radiusScale(countData[d.category][d.value])).attr("fill", "grey"); // 确保恢复到初始颜色
+                d3.select(this).attr("r", radiusScale(countData[d.category][d.value])).attr("fill", "grey"); // 点击后变为灰色
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
@@ -147,3 +160,6 @@ function saveSVG() {
     URL.revokeObjectURL(svgURL);
     document.body.removeChild(downloadLink);
 }
+
+// 窗口调整大小时更新字体大小
+window.addEventListener("resize", updateFontSize);
