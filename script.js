@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         tooltip.html(`<strong>${d}:</strong> ${dataItem.描述}`)
                             .style("left", () => {
                                 if (event.pageX + 300 > window.innerWidth) {
-                                    return (event.pageX - 300) + "px";
+                                    return (event.pageX - 150) + "px";
                                 }
                                 return (event.pageX + 5) + "px";
                             })
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 )
                 .style("left", () => {
                     if (event.pageX + 300 > window.innerWidth) {
-                        return (event.pageX - 300) + "px";
+                        return (event.pageX - 150) + "px";
                     }
                     return (event.pageX + 5) + "px";
                 })
