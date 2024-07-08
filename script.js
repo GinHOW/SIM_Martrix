@@ -69,20 +69,56 @@ document.addEventListener('DOMContentLoaded', function() {
                         tooltip.transition()
                             .duration(200)
                             .style("opacity", .9);
-                        tooltip.html(`<strong>${d}:</strong> ${dataItem.描述}`)
-                            .style("left", () => {
-                                if (event.pageX + 300 > window.innerWidth) {
-                                    return (event.pageX - 150) + "px";
-                                }
-                                return (event.pageX + 5) + "px";
-                            })
-                            .style("top", (event.pageY - 28) + "px");
+                        tooltip.html(`<strong>${d}:</strong> ${dataItem.描述}`);
+                        
+                        const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+                
+                        tooltip.style("left", () => {
+                            if (event.pageX + tooltipWidth > window.innerWidth) {
+                                return (event.pageX - tooltipWidth - 5) + "px"; // 向左移动tooltip
+                            }
+                            return (event.pageX + 5) + "px"; // 向右移动tooltip
+                        })
+                        .style("top", (event.pageY - 28) + "px");
+                
+                        // 设置占位符图像
+                        d3.select("#image-container")
+                            .style("display", "block")
+                            .select("img")
+                            .attr("src", "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" style="fill:black;"/></svg>'));
+                
+                        // 尝试使用jpg和png后缀加载图片
+                        const imageUrlJpg = `images/${d}.jpg`;
+                        const imageUrlPng = `images/${d}.png`;
+                
+                        // 创建一个新的Image对象用于加载图片
+                        const image = new Image();
+                        image.onload = function() {
+                            d3.select("#image-container img").attr("src", imageUrlJpg);
+                        };
+                        image.onerror = function() {
+                            const fallbackImage = new Image();
+                            fallbackImage.onload = function() {
+                                d3.select("#image-container img").attr("src", imageUrlPng);
+                            };
+                            fallbackImage.onerror = function() {
+                                // 占位符图像已经设置，不需要再做处理
+                            };
+                            fallbackImage.src = imageUrlPng;
+                        };
+                        image.src = imageUrlJpg;
+                
+                        console.log(`Trying to load image: ${imageUrlJpg} or ${imageUrlPng}`); // 调试输出
                     }
                 })
-                .on("mouseout", function() {
+                .on("mouseout", function(event, d) {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
+                
+                    // 隐藏图片
+                    d3.select("#image-container")
+                        .style("display", "none");
                 });
 
             yAxis.call(d3.axisLeft(y))
@@ -189,6 +225,3 @@ function saveSVG() {
     URL.revokeObjectURL(svgURL);
     document.body.removeChild(downloadLink);
 }
-
-// 窗口调整大小时更新字体大小
-window.addEventListener("resize", updateFontSize);

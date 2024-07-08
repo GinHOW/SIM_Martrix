@@ -47,3 +47,17 @@ canvas {
 #saveSVG:hover {
     background-color: #45a049;
 }
+
+#image-container {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+#image-container img {
+    max-width: 300px; /* 调整图片的最大宽度 */
+    max-height: 300px; /* 调整图片的最大高度 */
+    display: block;
+}
