@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const margin = { top: 20, right: 30, bottom: 200, left: 120 }; // 调整边距以容纳更多文本
+    const margin = { top: 20, right: 30, bottom: 150, left: 30 }; // 调整边距以容纳更多文本
     const width = 1500 - margin.left - margin.right; // 增大宽度
     const height = 800 - margin.top - margin.bottom; // 增大高度
 
@@ -208,9 +208,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
+            })
+            .on("click", function(event, d) {
+                const relatedTitles = data.filter(item => item[d.category] === d.value).map(item => item.标题);
+
+                // 清空图片容器
+                const imageGridContainer = d3.select("#image-grid-container");
+                imageGridContainer.html(""); // 清空之前的图片
+                imageGridContainer.style("display", "grid");
+
+               // 添加相关图片到容器
+               relatedTitles.forEach(title => {
+                const imageUrl = `images/${title}.jpg`;
+                const imageGridItem = imageGridContainer.append("div")
+                    .attr("class", "image-grid-item");
+                
+                imageGridItem.append("img")
+                    .attr("src", imageUrl)
+                    .on("error", function() {
+                        // 如果图片加载失败，显示黑色方块
+                        d3.select(this)
+                            .attr("src", "")
+                            .style("background-color", "black")
+                            .style("width", "100px")
+                            .style("height", "150px");
+                    });
+
+                imageGridItem.append("div")
+                    .attr("class", "title")
+                    .text(title);
+            });
+
+
+                // 调整图片容器的位置
+                const containerWidth = imageGridContainer.node().getBoundingClientRect().width;
+                const containerHeight = imageGridContainer.node().getBoundingClientRect().height;
+                imageGridContainer.style("top", `${(window.innerHeight - containerHeight) / 2}px`)
+                    .style("left", `${(window.innerWidth - containerWidth) / 2}px`)
+                    .style("transform", "translate(-50%, -50%)"); // 始终保持居中
             });
     });
-});
+ });
+
 
 
 function saveSVG() {
@@ -252,3 +291,26 @@ function updateImageContainerPosition() {
 
 // 在窗口大小变化时调用函数更新位置
 window.addEventListener("resize", updateImageContainerPosition);
+
+// 添加搜索框事件监听
+const searchBox = document.getElementById('search-box');
+searchBox.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+
+    svg.selectAll(".x-axis text")
+        .classed("highlighted", function(d) {
+            return d.toLowerCase().includes(query);
+        });
+
+    const matchedItem = data.find(item => item.标题.toLowerCase().includes(query));
+    if (matchedItem) {
+        const imageUrl = `images/${matchedItem.标题}.jpg`;
+        d3.select("#image-container")
+            .style("display", "block")
+            .select("img")
+            .attr("src", imageUrl);
+    } else {
+        d3.select("#image-container")
+            .style("display", "none");
+    }
+});
