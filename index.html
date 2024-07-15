@@ -3,20 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIM-100个点子</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>SIM</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div>
-        <input type="text" id="search-box" placeholder="Search...">
-    </div>
-    <div id="image-grid-container" class="image-grid-container"></div>
-    <div id="image-container">
-        <img src="data:image/svg+xml;base64,..." alt="Image"> <!-- 默认占位符图像 -->
-    </div>
-    <div id="chart"></div>
-    <button onclick="saveSVG()">保存为SVG</button> <!-- 保存按钮 -->
-    <script src="script.js"></script>
+    <div class="grid-container">
+        <div class="grid-item">
+            <div class="sidebar">
+                <a href="#" onclick="showPage('pages/SIM.html')">SIM</a>
+            </div>
+        </div>
+        <div class="grid-item">
+            <div class="sidebar">
+                <a href="#" onclick="showPage('pages/simIdeas/simIdeas.html')">100 个点子</a>
+                <a href="#" onclick="showPage('pages/simMap/simMap.html')">四梁八柱</a>
+                <a href="#" onclick="showPage('pages/page3.html')">页面 3</a>
+            </div>
+        </div>
+
+        <div class="grid-item"> </div>
+
+        <div class="grid-item">
+            <div class="content">
+                <div class="iframe-container">
+                    <iframe id="iframe" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
