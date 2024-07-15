@@ -1,0 +1,89 @@
+
+
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;/*  防止出现滚动条 */
+}
+
+
+#map-container {
+    padding: 0;
+    margin: 0 auto; /* 将左右外边距设为自动，实现水平居中 */
+    max-width: 100%; /* 确保容器不超过视口宽度 */
+}
+
+/*按钮*/
+.button-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+.button-container button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px; /* 按钮之间的间距 */
+}
+
+.button1 {
+    background-color: #3498db; /* 按钮1的背景色 */
+    color: white;
+}
+
+.button2 {
+    background-color: #2ecc71; /* 按钮2的背景色 */
+    color: white;
+}
+
+
+#checkbox-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#checkbox-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* 默认隐藏 */
+}
+
+#checkbox-container.expanded #checkbox-list {
+    display: block; /* 展开后显示 */
+}
+
+#show-all,
+#show-huangpu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-left: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#show-all {
+    right: 100px;
+}
+
+img.point-image {
+    max-width: 20px;
+    max-height: 20px;
+    transition: transform 0.2s;
+}
+
+img.point-image:hover {
+    transform: scale(1.5);
+}

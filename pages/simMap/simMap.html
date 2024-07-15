@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四梁八柱地图</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="resource/d3.v6.min.js"></script> <!-- 引入本地化的D3.js库 -->
+</head>
+<body>
+    <div id="map-container"> </div>
+
+    <div class="button-container">
+        <button class="button1" id="toggleMapButton">切换底图显示</button>
+        <button class="button2" id="toggleScriptButton">切换脚本</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleScriptButton = document.getElementById("toggleScriptButton");
+            const mapContainer = document.getElementById("map-container");
+
+            let currentScript = "map"; // 初始状态为显示地图
+
+            function loadScript(scriptName) {
+                console.log(`Loading script: ${scriptName}`); // 调试输出
+                const script = document.createElement("script");
+                script.src = scriptName;
+                script.id = "dynamicScript";
+                script.onload = () => console.log(`${scriptName} loaded successfully`);
+                script.onerror = () => console.error(`Failed to load script: ${scriptName}`);
+                document.body.appendChild(script); // 将脚本添加到body中
+            }
+
+            function unloadScript() {
+                const existingScript = document.getElementById("dynamicScript");
+                if (existingScript) {
+                    console.log(`Unloading script: ${existingScript.src}`); // 调试输出
+                    existingScript.remove();
+                }
+            }
+
+            function clearMapContainer() {
+                console.log("Clearing map container"); // 调试输出
+                mapContainer.innerHTML = "";
+            }
+
+            function switchScript() {
+                console.log(`Switching script from ${currentScript}`); // 调试输出
+                unloadScript();
+                clearMapContainer();
+                if (currentScript === "map") {
+                    loadScript("script_grid.js");
+                    toggleScriptButton.textContent = "按地图显示";
+                    currentScript = "time";
+                } else {
+                    loadScript("script_map.js");
+                    toggleScriptButton.textContent = "按网格显示";
+                    currentScript = "map";
+                }
+            }
+
+            toggleScriptButton.addEventListener("click", switchScript);
+
+            // 初始加载地图脚本
+            loadScript("script_map.js");
+        });
+    </script>
+</body>
+</html>
